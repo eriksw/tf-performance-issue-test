@@ -1,0 +1,3 @@
+variable "developer" {
+  type = string
+}

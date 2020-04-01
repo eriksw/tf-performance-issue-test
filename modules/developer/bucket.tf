@@ -1,5 +1,5 @@
 locals {
-  buckets = [
+  buckets = toset([
     "aaron",
     "amparo",
     "arturo",
@@ -31,20 +31,15 @@ locals {
     "philip",
     "roberta",
     "thomas",
-  ]
+  ])
 }
 
 # Stand-in for google_storage_bucket
 resource "null_resource" "bucket" {
-  for_each = {
-    for pair in setproduct(local.developers, local.buckets) : "${pair[0]}__${pair[1]}" => {
-      developer = pair[0]
-      bucket    = pair[1]
-    }
-  }
+  for_each = local.buckets
 
   provisioner "local-exec" {
-    command = "echo ${each.value.developer} ${each.value.bucket} ${random_id.bucket_name[each.key].hex} in project ${null_resource.project[each.value.developer].id}"
+    command = "echo ${var.developer} ${each.value} ${random_id.bucket_name[each.key].hex} in project ${null_resource.project.id}"
   }
 
   depends_on = [
@@ -53,18 +48,13 @@ resource "null_resource" "bucket" {
 }
 
 resource "random_id" "bucket_name" {
-  for_each = {
-    for pair in setproduct(local.developers, local.buckets) : "${pair[0]}__${pair[1]}" => {
-      developer = pair[0]
-      bucket    = pair[1]
-    }
-  }
+  for_each = local.buckets
 
   byte_length = 4
-  prefix      = "${each.value.bucket}-"
+  prefix      = "${each.value}-"
 
   keepers = {
-    developer = each.value.developer
-    bucket    = each.value.bucket
+    developer = var.developer
+    bucket    = each.value
   }
 }
