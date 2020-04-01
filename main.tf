@@ -1,0 +1,35 @@
+locals {
+  developers = toset([for username in local.developer_usernames : lower(username)])
+
+  developer_usernames = toset([
+    "andrea",
+    "arthur",
+    "bettyann",
+    "bobby",
+    "dean",
+    "debra",
+    "dennis",
+    "edward",
+    "elvin",
+    "ernest",
+    "frank",
+    "iris",
+    "irma",
+    "jerry",
+    "jo",
+    "john",
+    "lucas",
+    "matthew",
+    "michael",
+    "patrice",
+    "pauline",
+    "pedro",
+    "ricardo",
+    "rose",
+    "ruth",
+    "sandra",
+    "shane",
+    "teddy",
+    "wesley",
+  ])
+}
